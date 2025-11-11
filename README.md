@@ -1,32 +1,135 @@
+好，那我给你**专业、利落、无多余表情的 README**，适合面试、简历链接、GitHub 展示。
+
+你直接复制粘贴即可。
+
+---
+
 # MiniAuth
 
-MiniAuth 是一个基于 **FastAPI** 实现的轻量级用户认证系统，提供用户注册、登录与身份验证功能。
+A minimal user authentication system implemented with **FastAPI**, **SQLAlchemy**, and **JWT**.
+The project focuses on understanding the **core logic of backend authentication** rather than framework complexity.
 
+---
 
-## 🧱 技术栈
-| 技术 | 用途 |
-|-----|-----|
-| Python | 项目主语言 |
-| FastAPI | Web 框架 |
-| SQLite | 简单数据库存储用户信息 |
-| passlib[bcrypt] | 密码加密 |
-| python-jose | JWT Token 生成与验证 |
-| Uvicorn | 开发服务器 |
+## Overview
 
-## ✅ 当前进度
-- 项目结构初始化 ✅
-- 基础 FastAPI 路由 ✅
+MiniAuth implements three basic authentication capabilities:
 
-## 📦 启动方式
+1. **User Registration** — Store credentials securely (hashed password).
+2. **User Login** — Validate credentials and return a signed JWT.
+3. **Protected Resource Access** — Authenticate users via JWT in request headers.
+
+Authentication Flow:
+
+```
+[Client] → Register → [Server → Store hashed password]
+
+[Client] → Login → [Server → Validate + Issue JWT] → [Client stores Token]
+
+[Client] → Request with Authorization: Bearer <token> → [Server → Verify Token → Allow Access]
+```
+
+---
+
+## Tech Stack
+
+| Component            | Purpose                          | Notes for Understanding                                 |
+| -------------------- | -------------------------------- | ------------------------------------------------------- |
+| **FastAPI**          | API framework                    | Routing, request model validation, dependency injection |
+| **Pydantic**         | Request/response data validation | Defines data schema (`BaseModel`)                       |
+| **SQLAlchemy**       | ORM database layer               | Models, sessions, basic CRUD                            |
+| **Passlib (bcrypt)** | Password hashing                 | `hash()` and `verify()` logic                           |
+| **PyJWT**            | JSON Web Tokens                  | Token creation & signature verification                 |
+
+---
+
+## Directory Structure (Recommended)
+
+```
+MiniAuth/
+├── app/
+│   ├── main.py
+│   ├── database.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── auth.py
+│   └── utils.py
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Data Model
+
+```python
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+```
+
+---
+
+## JWT Authentication
+
+A JWT contains:
+
+```
+header.payload.signature
+```
+
+Server-side validation checks:
+
+1. Token signature integrity
+2. Expiration timestamp
+3. Extracted `user_id`
+
+---
+
+## API Endpoints
+
+| Method | Endpoint         | Description           | Auth Required      |
+| ------ | ---------------- | --------------------- | ------------------ |
+| POST   | `/auth/register` | Create new user       | No                 |
+| POST   | `/auth/login`    | Login and return JWT  | No                 |
+| GET    | `/auth/profile`  | Get current user info | Yes (Bearer Token) |
+
+Protected request header example:
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## Running Locally
+
+```bash
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+```
 
-访问： http://127.0.0.1:8000/
+API docs will be available at:
 
-## 🗓 项目路线图
-- [ ] 用户模型设计
-- [ ] 注册接口（带密码加密）
-- [ ] 登录接口（生成 JWT token）
-- [ ] 个人信息接口（需要 token 才能访问）
-- [ ] 简单前端页面（可选）
-- [ ] 部署到 Render / Railway （免费上线）
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## Progress Checklist
+
+| Feature                                   | Status        |
+| ----------------------------------------- | ------------- |
+| FastAPI routing setup                     | ✅             |
+| Database (SQLAlchemy) initialization      | ✅             |
+| User model + schema definition            | ✅             |
+| Registration endpoint                     | ⬜ In Progress |
+| Login + JWT issue                         | ⬜ In Progress |
+| Protected profile endpoint                | ⬜ In Progress |
+| Optional: password reset / delete account | (Optional)    |
+
+---
