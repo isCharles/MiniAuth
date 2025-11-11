@@ -1,9 +1,3 @@
-好，那我给你**专业、利落、无多余表情的 README**，适合面试、简历链接、GitHub 展示。
-
-你直接复制粘贴即可。
-
----
-
 # MiniAuth
 
 A minimal user authentication system implemented with **FastAPI**, **SQLAlchemy**, and **JWT**.
