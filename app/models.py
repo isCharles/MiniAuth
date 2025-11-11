@@ -3,7 +3,7 @@ from .database import get_db
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def get_user_by_username(username: str, password:str):
+def create_user(username: str, password:str):
     db= get_db()
     hashed_pw = pwd_context.hash(password)
     db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)")

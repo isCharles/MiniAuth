@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status
 from .schemas import UserCreate
 from .models import create_user
 
