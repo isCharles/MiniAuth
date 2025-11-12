@@ -1,15 +1,9 @@
-from passlib.context import CryptContext
-from .database import get_db
+from sqlalchemy import Column, Integer, String
+from .database import Base
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+class User(Base):
+    __tablename__ = "users"
 
-def create_user(username: str, password:str):
-    db= get_db()
-    hashed_pw = pwd_context.hash(password)
-    db.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)")
-    try:
-        db.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_pw))
-        db.commit()
-        return True
-    except:
-        return False
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
